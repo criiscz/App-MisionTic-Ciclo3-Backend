@@ -2,6 +2,7 @@ from pathlib import Path
 from corsheaders.defaults import default_headers
 import os
 import environ
+
 env = environ.Env()
 
 environ.Env.read_env()
@@ -58,7 +59,19 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
-
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
@@ -122,7 +135,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-    ]
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
+# usuario para auth
+# AUTH_USER_MODEL = 'ECommerce.model'
