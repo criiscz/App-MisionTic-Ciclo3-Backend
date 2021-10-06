@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'core',
+    'ECommerce',
 
     # Apps from project.
 
@@ -81,10 +82,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    # poner database postgreSQL
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd61irh7fkccsl8',
+        'USER': 'ncpsnhdthaqise',
+        'PASSWORD': '5709ec22b802edc443201ea1b730cc6a0a6ba46c4e507d00f29fd25532f9f454',
+        'HOST': 'ec2-107-22-18-26.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
@@ -143,4 +147,4 @@ REST_FRAMEWORK = {
     )
 }
 # usuario para auth
-# AUTH_USER_MODEL = 'ECommerce.model'
+AUTH_USER_MODEL = 'ECommerce.Account'

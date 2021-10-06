@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-
+    path('admin/', )
     path('api-auth/', include('rest_framework.urls'))
 ]
 
