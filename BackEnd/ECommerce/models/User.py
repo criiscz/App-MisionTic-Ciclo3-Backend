@@ -20,4 +20,7 @@ class User(models.Model):
     surname = models.CharField('Surname', max_length=30)
     hire_date = models.DateField('Date', default=timezone.now, null=True)
     user_type = models.CharField('User Type', choices=user_types, max_length=30, default='Client')
-    account = models.ForeignKey(Account, related_name='account', on_delete=models.CASCADE, null=True)
+    account = models.OneToOneField(Account, related_name='account', on_delete=models.CASCADE, null=True)
+
+
+
