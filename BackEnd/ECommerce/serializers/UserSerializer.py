@@ -12,10 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'surname', 'account']
 
     def create(self, validated_data):
-        print(validated_data)
+        print("", validated_data)
         account_data = validated_data.pop('account')
         account_instance = Account.objects.create(**account_data)
-        user_instance = User.objects.create(account_id=account_instance.id ,**validated_data)
+        user_instance = User.objects.create(account_id=account_instance.id, **validated_data)
         return user_instance
 
     def to_representation(self, instance):
