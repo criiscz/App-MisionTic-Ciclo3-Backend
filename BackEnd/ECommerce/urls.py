@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, re_path
 
-from .views.UserView import UserView
+from .views.UserView import *
 
 urlpatterns = [
-    path('all-users/', UserView.as_view())
+    path('users/', UserView.as_view()),
+    path('users/s/', UserDetail.as_view())
 ]

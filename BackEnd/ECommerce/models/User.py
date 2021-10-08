@@ -22,5 +22,3 @@ class User(models.Model):
     user_type = models.CharField('User Type', choices=user_types, max_length=30, default='Client')
     account = models.OneToOneField(Account, related_name='account', on_delete=models.CASCADE, null=True)
 
-
-
