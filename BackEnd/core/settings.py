@@ -1,4 +1,7 @@
+from datetime import timedelta
 from pathlib import Path
+
+import sys
 from corsheaders.defaults import default_headers
 import os
 import environ
@@ -23,15 +26,26 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
+    # 'rest_framework.authtoken',
+    # 'rest_framework_simplejwt',
     'corsheaders',
-    'core',
     'ECommerce',
 
     # Apps from project.
 
 ]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,17 +94,35 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd61irh7fkccsl8',
-        'USER': 'ncpsnhdthaqise',
-        'PASSWORD': '5709ec22b802edc443201ea1b730cc6a0a6ba46c4e507d00f29fd25532f9f454',
-        'HOST': 'ec2-107-22-18-26.compute-1.amazonaws.com',
-        'PORT': '5432',
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'd2hn7b51el578g',
+            'USER': 'iqjnewcvczlubg',
+            'PASSWORD': 'b4f72856d2cf89bb284b2e0f8cd86904557c63c2ffe5dfa39dd4a81a3e447166',
+            'HOST': 'ec2-52-204-213-254.compute-1.amazonaws.com',
+            'PORT': 5432,
+            'TEST': {
+                'NAME': 'd2hn7b51el578g',
+            }
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'd61irh7fkccsl8',
+            'USER': 'ncpsnhdthaqise',
+            'PASSWORD': '5709ec22b802edc443201ea1b730cc6a0a6ba46c4e507d00f29fd25532f9f454',
+            'HOST': 'ec2-107-22-18-26.compute-1.amazonaws.com',
+            'PORT': '5432',
+            'TEST': {
+                'NAME': 'd61irh7fkccsl8',
+            },
+        }
+
+    }
 
 
 # Password validation
@@ -148,3 +180,5 @@ REST_FRAMEWORK = {
 }
 # usuario para auth
 AUTH_USER_MODEL = 'ECommerce.Account'
+
+
