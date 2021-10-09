@@ -63,7 +63,6 @@ class UserDetailView(generics.RetrieveAPIView):
 #         else:
 #             return Response(msg_parameter_not_found)
 
-#
 # class UserById(generics.RetrieveAPIView):
 #     queryset = User.objects.all()
 #     serializer_class = UserSerializer

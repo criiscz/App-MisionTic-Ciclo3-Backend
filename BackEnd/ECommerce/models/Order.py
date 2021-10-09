@@ -17,5 +17,5 @@ class Order(models.Model):
 
     date_order = models.DateTimeField('Date Order', auto_now_add=True)
     client = models.ForeignKey(User, related_name='client', on_delete=models.CASCADE)
-    seller = models.ForeignKey(User, related_name='seller', on_delete=models.CASCADE)
+    seller = models.ForeignKey(User, related_name='seller', on_delete=models.CASCADE, null=True)
     order_status = models.CharField('Order Status', max_length=20, choices=status_list, default='En Preparación')
