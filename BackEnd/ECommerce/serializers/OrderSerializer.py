@@ -1,25 +1,33 @@
 from rest_framework import serializers
-from django.core import serializers as s
+# from django.core import serializers as s
 
 from .sellSerializers import SellSerializer
-from ..models import Order, User, Sell
+from ..models import Order, User, Sell, Product
+from ..views.ValidateToken import validate_token
 
 
 class OrderSerializer(serializers.ModelSerializer):
+
+    def __init__(self, instance=None, client_id=None, **kwargs):
+        self.client_id = client_id
+        super().__init__(instance, **kwargs)
+
     class Meta:
         model = Order
-        fields = ['id', 'client', 'order_status', 'date_order']
+        fields = ['id', 'order_status', 'date_order']
 
     def create(self, validated_data):
-        initial_data = self.initial_data  # initial_data is all data from request
-        order_instance = Order.objects.create(client_id=initial_data['client'], **validated_data)
+        initial_data = self.initial_data
+        if self.client_id is not None:
+            order_instance = Order.objects.create(client_id=self.client_id, **validated_data)
+        else:
+            order_instance = Order.objects.create(client_id=initial_data['client'], **validated_data)
         sells = initial_data.pop('sells')
         self.create_sells(sells, order_instance)
         return order_instance
 
     def to_representation(self, instance):
-        print("Instance", instance)
-        order = Order.objects.get(id=instance[0].id)
+        order = Order.objects.get(id=instance.id)
         client = User.objects.get(id=order.client_id)
         sells = Sell.objects.filter(order_id=order.id)
         json_data = self.get_json(client, order)
@@ -31,7 +39,7 @@ class OrderSerializer(serializers.ModelSerializer):
         json_data = {
             'id': order.id,
             'date_order': order.date_order,
-            'order_status': order.order_status,
+            'order_status': order.status_list[int(order.order_status)][1],
             'client': {
                 'id': client.id,
                 'name': client.name,
@@ -43,4 +51,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create_sells(self, sells, order_instance):
         for sell in sells:
-            Sell.objects.create(order_id=order_instance.id, **sell)
+            product = Product.objects.get(id=sell['product'])
+            Sell.objects.create(order_id=order_instance.id, product_id=product.id,
+                                product_quantity=sell['product_quantity'])

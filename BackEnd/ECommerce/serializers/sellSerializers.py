@@ -16,7 +16,6 @@ class SellSerializer(serializers.ModelSerializer):
         product_instance = Product.objects.create(**product)
         sell_instance = Sell.objects.create(product_id=product_instance.id, **validated_data)
 
-        # sell_instance = Sell.objects.create(order_id=order_instance.id, **validated_data)
         return sell_instance
 
     def to_representation(self, instance):

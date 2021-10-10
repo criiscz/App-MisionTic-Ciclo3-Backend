@@ -1,13 +1,10 @@
-from django.conf import settings
-from django.views import View
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.backends import TokenBackend
 
+from .ValidateToken import validate_token
 from ..models import Product
 from ..serializers.ProductSerializer import ProductSerializer
-from ..serializers.UserSerializer import UserSerializer
 
 
 class AllProductView(generics.ListAPIView):
@@ -16,31 +13,45 @@ class AllProductView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        token = request.META.get('HTTP_AUTHORIZATION')[7:]
-        token_backend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
-        valid_data = token_backend.decode(token, verify=False)
-        print(kwargs)
-        print(valid_data)
-        print(self.queryset[0])
-
-        # if valid_data['user_id'] != kwargs['pk']:
-        #     string_response = {'detail': 'Unauthorized Request'}
-        #     return Response(string_response, status=401)
-        # queryset = self.queryset.filter(id=kwargs['id_search'])
-        # print(queryset)
-        # return Response(ProductSerializer(self.queryset), status=200)
+        validate_token(request)
         return super().get(request, *args, **kwargs)
 
 
 class CreateProductView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
-        token = request.META.get('HTTP_AUTHORIZATION')[7:]
-        token_backend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
-        valid_data = token_backend.decode(token, verify=False)
-        print(request)
-        print(valid_data)
+        validate_token(request)
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response("Producto Creado", status=201)
+        return Response({"message": "Producto Creado"}, status=201)
+
+
+class SearchByNameProductView(generics.ListAPIView):
+    serializer_class = ProductSerializer,
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        validate_token(request)
+        name = self.request.query_params.get('name')
+        if name:
+            queryset = Product.objects.filter(name__icontains=name)
+            if len(queryset) == 0:
+                return Response([], status=404)
+            return Response(ProductSerializer(queryset, many=True).data)
+        return Response(ProductSerializer(Product.objects.all(), many=True).data, status=200)
+
+
+class SearchByIdProductView(generics.RetrieveAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        validate_token(request)
+        print(kwargs)
+        if len(kwargs) > 0 and kwargs['product_id']:
+            queryset = Product.objects.filter(id=kwargs['product_id'])
+            if len(queryset) == 0:
+                return Response({"message": "Product not found"}, status=404)
+            return Response(ProductSerializer(queryset, many=True).data, status=200)
+        return Response(ProductSerializer(Product.objects.all(), many=True).data, status=200)
