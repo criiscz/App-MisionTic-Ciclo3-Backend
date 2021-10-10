@@ -7,16 +7,6 @@ from ..models import Product
 from ..serializers.ProductSerializer import ProductSerializer
 
 
-class AllProductView(generics.ListAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, *args, **kwargs):
-        validate_token(request)
-        return super().get(request, *args, **kwargs)
-
-
 class CreateProductView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):

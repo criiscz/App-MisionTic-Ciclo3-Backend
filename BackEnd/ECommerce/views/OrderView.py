@@ -32,6 +32,16 @@ class DetailOrderView(generics.RetrieveAPIView):
         return Response(self.get_serializer(queryset).data, status=200)
 
 
+class DetailMyOrderView(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        validated_data = validate_token(request)
+        user_id = User.objects.get(account_id=validated_data['user_id']).id
+        queryset = Order.objects.filter(client_id=user_id)
+        return Response(OrderSerializer(queryset, many=True).data, status=200)
+
+
 class UpdateOrderView(generics.UpdateAPIView):
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)

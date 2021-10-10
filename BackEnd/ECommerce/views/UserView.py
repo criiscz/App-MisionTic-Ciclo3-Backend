@@ -36,7 +36,9 @@ class UserDetailView(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         valid_data = validate_token(request)
-        user_id = User.objects.get(id=valid_data['user_id'], user_type='Seller')
+        print(valid_data)
+        user_id = User.objects.filter(account_id=valid_data['user_id'], user_type='Seller').first()
+        print(user_id)
         if user_id:
             queryset = User.objects.filter(id=kwargs['id_search'])
             return Response(UserSerializer(queryset).data, status=200)
