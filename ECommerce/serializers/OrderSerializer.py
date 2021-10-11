@@ -1,9 +1,7 @@
 from rest_framework import serializers
-# from django.core import serializers as s
 
 from .sellSerializers import SellSerializer
 from ..models import Order, User, Sell, Product
-from ..views.ValidateToken import validate_token
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -14,7 +12,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'order_status', 'date_order']
+        fields = ['order_status', 'date_order']
 
     def create(self, validated_data):
         initial_data = self.initial_data
