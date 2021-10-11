@@ -7,6 +7,9 @@
 node_modules/
 dist/
 
+# Python Environment files
+/env
+
 # Compiled Java class files
 *.class
 
