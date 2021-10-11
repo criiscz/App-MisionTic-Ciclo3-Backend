@@ -9,13 +9,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'name', 'surname', 'account']
+        fields = ['id', 'name', 'surname', 'account', 'user_type']
 
     def create(self, validated_data):
-        print("", validated_data)
         account_data = validated_data.pop('account')
-        account_instance = Account.objects.create(**account_data)
-        user_instance = User.objects.create(account_id=account_instance.id, **validated_data)
+        print("account", account_data)
+        account_data = Account.objects.create(**account_data)
+        user_instance = User.objects.create(account_id=account_data.id, **validated_data)
         return user_instance
 
     def to_representation(self, instance):
