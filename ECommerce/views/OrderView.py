@@ -1,4 +1,5 @@
 from rest_framework import generics, views
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -68,3 +69,13 @@ class UpdateOrderView(generics.UpdateAPIView):
             serializer.save()
             return Response(status=200, data=serializer.data)
         return Response(status=400, data="wrong parameters")
+
+
+class DeleteOrderView(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request, *args, **kwargs):
+        validated_data = validate_token(request)
+        user_id = User.objects.get(account_id=validated_data['user_id']).id
+        Order.objects.filter(id=kwargs['order_id'], client_id=user_id).delete()
+        return Response({"detail": "Orden Eliminada"})
