@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views.OrderView import CreateOrderView, DetailOrderView, UpdateOrderView, DetailMyOrderView
+from .views.OrderView import CreateOrderView, DetailOrderView, UpdateOrderView, DetailMyOrderView, DeleteOrderView
 from .views.ProductView import CreateProductView, SearchByIdProductView, SearchByNameProductView
 from .views.UserView import *
 
@@ -17,4 +17,5 @@ urlpatterns = [
     path('orders/<int:pk>', DetailOrderView.as_view()),
     path('orders/update/status/<int:pk>', UpdateOrderView.as_view()),
     path('orders/current/', DetailMyOrderView.as_view()),
+    path('orders/delete/<int:order_id>', DeleteOrderView.as_view())
 ]
