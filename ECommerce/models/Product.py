@@ -6,3 +6,4 @@ class Product(models.Model):
     name = models.CharField('name', max_length=30)
     sell_price = models.FloatField('sell_price')
     buy_price = models.FloatField('buy_price')
+
