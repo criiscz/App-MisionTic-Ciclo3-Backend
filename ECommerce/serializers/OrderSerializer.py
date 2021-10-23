@@ -49,6 +49,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create_sells(self, sells, order_instance):
         for sell in sells:
+            print(sell)
             product = Product.objects.get(id=sell['product'])
             Sell.objects.create(order_id=order_instance.id, product_id=product.id,
                                 product_quantity=sell['product_quantity'])
