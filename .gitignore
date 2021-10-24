@@ -53,3 +53,4 @@ Thumbs.db
 
 
 core/settings.py
+.env
