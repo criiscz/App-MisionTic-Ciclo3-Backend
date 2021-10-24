@@ -54,3 +54,5 @@ Thumbs.db
 
 core/settings.py
 .env
+Backend/core/settings.py
+Backend/core/.env
